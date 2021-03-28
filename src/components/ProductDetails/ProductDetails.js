@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import fakeData from '../../fakeData';
 import Product from '../Header/Product/Product';
 
 const ProductDetails = () => {
     const { productKey } = useParams();
+    const [product, setProduct] = useState({});
 
-   const productDetails = fakeData.find(pd => pd.key === productKey);
-   console.log(productDetails);
+    useEffect(()=>{
+        fetch('https://ancient-wave-06547.herokuapp.com/products/'+ productKey)
+        .then(res => res.json())
+        .then(data => setProduct(data))
+    },[productKey])
     return (
         <div>
-            <h2>{productKey} Product details page coming sooon</h2>
-            <Product showAddToCart={false} Product={productDetails}></Product>
+            <h2> Product details</h2>
+            <Product showAddToCart={false} Product={product}></Product>
         </div>
     );
 };

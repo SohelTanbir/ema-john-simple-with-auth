@@ -1,12 +1,24 @@
 import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
 import { userContext } from '../../App';
+import { processOrder } from '../../utilities/databaseManager';
 import './Shipment.css';
 
 const Shipment = ()=>{
     const { register, handleSubmit, watch, errors } = useForm();
-    const onSubmit = data => console.log(data);
     const [loggedInUser, setLoggedInUser] = useContext(userContext);
+    const onSubmit = data => {
+      fetch('https://ancient-wave-06547.herokuapp.com/addOrder', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(result => {
+          console.log('shipment page', result)
+      })
+    };
+   
 
   return (
         <div className="ship-form">

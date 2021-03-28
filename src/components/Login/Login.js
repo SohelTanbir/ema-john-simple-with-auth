@@ -11,7 +11,6 @@ firebase.initializeApp(firebaseConfig)
 
 function Login() {
     const [loggedInUser, setLoggedInUser] = useContext(userContext);
-
     const history =  useHistory();
     const location = useLocation();
     let { from } = location.state || { from: { pathname: "/" } }; 
@@ -37,7 +36,7 @@ function Login() {
         photo:photoURL
       }
       setUser(isSignIn);
-
+      setLoggedInUser(isSignIn)
     })
   }
 

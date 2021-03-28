@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import fakeData from '../../fakeData';
 import { getDatabaseCart, processOrder, removeFromDatabaseCart } from '../../utilities/databaseManager';
 import Cart from '../Header/Cart/Cart';
 import ReviewItem from '../ReviewItem/ReviewItem';
@@ -19,15 +18,16 @@ const Review = (props)=>{
 }
    useEffect(()=>{
     const savedCart = getDatabaseCart();
-    const productKeys = Object.keys(savedCart)
-    const Cartproduct = productKeys.map(key => {
-        const proudct = fakeData.find(pd => pd.key === key);
-        proudct.quantity = savedCart[key];
-        return proudct;
-       
-    })
-    setReviewCart(Cartproduct);
-
+    const productKeys = Object.keys(savedCart);
+        fetch('https://ancient-wave-06547.herokuapp.com/productsKeys', {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(productKeys)
+        })
+        .then(res => res.json())
+        .then(data => setReviewCart(data));
    },[]);
 
    const [orderPlaced, setOrderPlaced] = useState(false);

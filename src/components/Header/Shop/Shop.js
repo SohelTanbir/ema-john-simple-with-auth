@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import fakeData from '../../../fakeData';
 import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import addToDatabaseCart, { getDatabaseCart } from'../../../utilities/databaseManager';
@@ -9,20 +8,28 @@ import { Link } from 'react-router-dom';
 
 
 const Shop = () => {
-    const first10 = fakeData.slice(0,10);
-    const [products]= useState(first10);
+    const [products, setProducts]= useState([]);
     const [cart,setcart] = useState([]);
+
+    useEffect(()=>{
+        fetch('https://ancient-wave-06547.herokuapp.com/products')
+        .then(res => res.json())
+        .then(data => setProducts(data))
+    },[])
+
 
     useEffect(()=>{
         const savedCart = getDatabaseCart();
         const productkeys = Object.keys(savedCart);
+       if(products.length > 0){
        const previousCart = productkeys.map(existingkey =>{
-        const product = fakeData.find(pd => pd.key === existingkey);
+        const product = products.find(pd => pd.key === existingkey);
         product.quantity = savedCart[existingkey];
         return product
        });
        setcart(previousCart);
-    },[])
+       }
+    },[products])
 
 
     const handlerAddProduct =(product)=>{
